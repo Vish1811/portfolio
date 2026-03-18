@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vishnu Kumar — Senior Software Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=JetBrains+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+/* ─── TOKENS ─── */
+:root{
+  --black:#0a0a0a;
+  --deep:#111;
+  --card:#161616;
+  --border:#1e1e1e;
+  --border2:#2a2a2a;
+  --gold:#c9a84c;
+  --gold-dim:rgba(201,168,76,.1);
+  --gold-glow:rgba(201,168,76,.25);
+  --white:#f0ede8;
+  --muted:#6b6b6b;
+  --muted2:#3a3a3a;
+  --serif:'Playfair Display',Georgia,serif;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'DM Sans','Helvetica Neue',sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+
+/* ─── BASE ─── */
+body{background:var(--black);color:var(--white);font-family:var(--sans);overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased}
+::selection{background:var(--gold);color:var(--black)}
+::-webkit-scrollbar{width:2px}
+::-webkit-scrollbar-track{background:var(--black)}
+::-webkit-scrollbar-thumb{background:var(--gold)}
+a,button{cursor:none}
+a{text-decoration:none;color:inherit}
+
+/* ─── CURSOR ─── */
+.cursor-dot{
+  position:fixed;top:0;left:0;
+  width:8px;height:8px;
+  background:var(--gold);border-radius:50%;
+  pointer-events:none;z-index:99999;
+  transform:translate(-50%,-50%);
+  transition:transform .08s linear,width .2s var(--ease),height .2s var(--ease),background .2s;
+  will-change:transform;
+}
+.cursor-ring{
+  position:fixed;top:0;left:0;
+  width:36px;height:36px;
+  border:1.5px solid rgba(201,168,76,.6);
+  border-radius:50%;pointer-events:none;z-index:99998;
+  transform:translate(-50%,-50%);
+  transition:width .3s var(--ease),height .3s var(--ease),border-color .3s,transform .12s linear;
+  will-change:transform;
+}
+.cursor-dot.hover{width:12px;height:12px;background:var(--gold)}
+.cursor-ring.hover{width:52px;height:52px;border-color:var(--gold)}
+
+/* ─── CANVAS ─── */
+#bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:.3;pointer-events:none}
+
+/* ─── NAV ─── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:28px 60px;
+  transition:padding .4s var(--ease),background .4s,border-color .4s;
+  border-bottom:1px solid transparent;
+}
+.nav.scrolled{
+  padding:16px 60px;
+  background:rgba(10,10,10,.95);
+  backdrop-filter:blur(20px);
+  border-bottom-color:var(--border);
+}
+.nav-brand{font-family:var(--serif);font-size:22px;color:var(--white);letter-spacing:-.5px}
+.nav-brand span{color:var(--gold)}
+.nav-links{display:flex;align-items:center;list-style:none;gap:0}
+.nav-links a{
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  color:var(--muted);padding:10px 14px;text-transform:uppercase;
+  transition:color .2s;
+}
+.nav-links a:hover{color:var(--gold)}
+.nav-cta{
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;
+  color:var(--gold);border:1px solid var(--gold);
+  padding:11px 22px;text-transform:uppercase;margin-left:20px;
+  transition:background .2s,color .2s;
+}
+.nav-cta:hover{background:var(--gold);color:var(--black)}
+
+/* ─── REVEAL ─── */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .75s var(--ease),transform .75s var(--ease)}
+.rv.visible{opacity:1;transform:none}
+
+/* ─── HERO ─── */
+#hero{
+  position:relative;z-index:1;
+  min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  padding:120px 60px 80px;max-width:1400px;margin:0 auto;
+}
+.hero-eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--gold);
+  text-transform:uppercase;margin-bottom:28px;
+  display:flex;align-items:center;gap:16px;
+  animation:fromLeft .8s var(--ease) .1s both;
+}
+.hero-eyebrow::before{content:'';width:44px;height:1px;background:var(--gold)}
+.hero-h1{
+  font-family:var(--serif);
+  font-size:clamp(64px,9.5vw,130px);
+  font-weight:900;line-height:.92;letter-spacing:-3px;color:var(--white);
+  animation:fromBottom 1s var(--ease) .25s both;
+}
+.hero-h1 em{font-style:italic;color:var(--gold)}
+.hero-role{
+  font-family:var(--serif);font-size:clamp(20px,2.8vw,38px);
+  color:var(--muted);font-style:italic;margin-top:16px;letter-spacing:-.3px;
+  animation:fromBottom .9s var(--ease) .4s both;
+}
+.hero-desc{
+  max-width:560px;margin-top:36px;font-size:17px;line-height:1.8;
+  color:var(--muted);font-weight:300;
+  animation:fromBottom .9s var(--ease) .55s both;
+}
+.hero-desc strong{color:var(--white);font-weight:500}
+.hero-btns{
+  display:flex;align-items:center;gap:24px;margin-top:52px;
+  animation:fromBottom .9s var(--ease) .7s both;
+}
+.btn-fill{
+  font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  background:var(--gold);color:var(--black);padding:16px 36px;font-weight:700;
+  transition:transform .2s var(--ease),box-shadow .2s;display:inline-block;
+}
+.btn-fill:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(201,168,76,.3)}
+.btn-ghost{
+  font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--white);display:flex;align-items:center;gap:10px;
+  transition:color .2s,gap .2s var(--ease);
+}
+.btn-ghost:hover{color:var(--gold);gap:18px}
+.hero-stats{
+  display:flex;flex-wrap:wrap;gap:56px;margin-top:80px;
+  animation:fromBottom .9s var(--ease) .85s both;
+}
+.stat-val{font-family:var(--serif);font-size:clamp(40px,5vw,68px);font-weight:700;color:var(--gold);line-height:1;letter-spacing:-2px}
+.stat-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-top:8px;max-width:130px;line-height:1.55}
+.hero-scroll{
+  position:absolute;bottom:40px;left:60px;
+  font-family:var(--mono);font-size:10px;color:var(--muted2);
+  letter-spacing:.14em;display:flex;align-items:center;gap:12px;
+  animation:fadeIn 1.5s var(--ease) 1.5s both;
+}
+.hero-scroll::before{content:'';width:40px;height:1px;background:var(--muted2)}
+
+@keyframes fromLeft{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:none}}
+@keyframes fromBottom{from{opacity:0;transform:translateY(36px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ─── SECTION SHELL ─── */
+.section-wrap{border-top:1px solid var(--border)}
+.section{position:relative;z-index:1;padding:120px 60px;max-width:1400px;margin:0 auto}
+.sec-tag{
+  font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--gold);
+  text-transform:uppercase;display:flex;align-items:center;gap:14px;margin-bottom:16px;
+}
+.sec-tag::before{content:'';width:28px;height:1px;background:var(--gold)}
+.sec-tag .n{color:var(--muted2)}
+.sec-title{
+  font-family:var(--serif);font-size:clamp(36px,5vw,64px);
+  font-weight:700;line-height:1.05;letter-spacing:-1.5px;color:var(--white);margin-bottom:72px;
+}
+.sec-title em{font-style:italic;color:var(--gold)}
+
+/* ─── ABOUT ─── */
+.about-grid{display:grid;grid-template-columns:3fr 2fr;gap:100px;align-items:start}
+.about-body p{font-size:17px;line-height:1.85;color:var(--muted);margin-bottom:20px;font-weight:300}
+.about-body p strong{color:var(--white);font-weight:500}
+.about-body a{color:var(--gold);border-bottom:1px solid transparent;transition:border-color .2s}
+.about-body a:hover{border-color:var(--gold)}
+.tech-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px}
+.tech-pill{
+  font-family:var(--mono);font-size:11px;color:var(--muted);
+  border:1px solid var(--border2);padding:6px 14px;
+  transition:color .2s,border-color .2s;
+}
+.tech-pill:hover{color:var(--gold);border-color:var(--gold)}
+.portrait-box{position:relative}
+.portrait{
+  width:100%;aspect-ratio:3/4;background:var(--card);
+  border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.portrait-letters{
+  font-family:var(--serif);font-size:96px;font-weight:900;
+  color:var(--border2);letter-spacing:-4px;user-select:none;
+  transition:color .5s;
+}
+.portrait:hover .portrait-letters{color:rgba(201,168,76,.06)}
+.corner{position:absolute;width:40px;height:40px;border-color:var(--gold);border-style:solid;opacity:.5;transition:opacity .3s}
+.portrait:hover .corner{opacity:1}
+.corner.tl{top:16px;left:16px;border-width:1px 0 0 1px}
+.corner.tr{top:16px;right:16px;border-width:1px 1px 0 0}
+.corner.bl{bottom:16px;left:16px;border-width:0 0 1px 1px}
+.corner.br{bottom:16px;right:16px;border-width:0 1px 1px 0}
+.portrait-badge{
+  position:absolute;bottom:16px;left:16px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--gold);
+  background:rgba(10,10,10,.9);padding:6px 12px;border:1px solid var(--border2);
+  text-transform:uppercase;
+}
+
+/* ─── EXPERIENCE ─── */
+.exp-layout{display:grid;grid-template-columns:220px 1fr;gap:0;min-height:500px}
+.exp-tabs{border-right:1px solid var(--border)}
+.exp-tab{
+  display:block;padding:18px 24px 18px 0;
+  border-bottom:1px solid var(--border);
+  border-right:2px solid transparent;margin-right:-1px;
+  cursor:none;transition:border-right-color .3s,background .2s;
+}
+.exp-tab.active{border-right-color:var(--gold)}
+.exp-tab.active .etab-co{color:var(--gold)}
+.etab-date{font-family:var(--mono);font-size:10px;color:var(--muted2);letter-spacing:.06em;margin-bottom:5px}
+.etab-co{font-size:14px;font-weight:500;color:var(--muted);transition:color .2s}
+.exp-tab:hover .etab-co{color:var(--white)}
+.etab-role{font-family:var(--mono);font-size:10px;color:var(--muted2);margin-top:3px}
+.exp-panels{padding-left:56px}
+.exp-panel{display:none}
+.exp-panel.active{display:block;animation:fadeIn .35s ease}
+.panel-head{padding-bottom:24px;border-bottom:1px solid var(--border);margin-bottom:28px}
+.panel-title{font-family:var(--serif);font-size:clamp(22px,2.8vw,36px);font-weight:700;color:var(--white);letter-spacing:-.3px;line-height:1.2;margin-bottom:12px}
+.panel-title span{font-style:italic;color:var(--gold)}
+.panel-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:11px;color:var(--gold);
+  background:var(--gold-dim);border:1px solid rgba(201,168,76,.2);padding:6px 14px;
+}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{
+  font-family:var(--mono);font-size:10px;color:var(--muted2);
+  border:1px solid var(--border);padding:4px 10px;text-transform:uppercase;letter-spacing:.04em;
+}
+.ach-list{list-style:none;display:flex;flex-direction:column;gap:14px}
+.ach-item{
+  display:grid;grid-template-columns:40px 1fr;gap:18px;align-items:start;
+  padding:20px;border:1px solid var(--border);transition:border-color .25s,background .25s;
+}
+.ach-item:hover{border-color:var(--border2);background:var(--card)}
+.ach-num{
+  width:40px;height:40px;border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:11px;color:var(--gold);flex-shrink:0;
+}
+.ach-body strong{color:var(--white);font-weight:500;display:block;margin-bottom:5px;font-size:15px;line-height:1.3}
+.ach-body p{font-size:13px;line-height:1.65;color:var(--muted);font-weight:300}
+
+/* ─── COLLEGE ─── */
+.college-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.college-intro{font-size:17px;line-height:1.8;color:var(--muted);margin-bottom:56px;font-weight:300;max-width:640px}
+.college-intro strong{color:var(--white);font-weight:500}
+.vtl{position:relative;padding-left:28px}
+.vtl::before{content:'';position:absolute;left:0;top:6px;bottom:0;width:1px;background:var(--border)}
+.vt-item{position:relative;padding-bottom:48px}
+.vt-item:last-child{padding-bottom:0}
+.vt-dot{
+  position:absolute;left:-33px;top:5px;
+  width:11px;height:11px;background:var(--black);
+  border:1px solid var(--gold);
+  transition:background .2s,box-shadow .2s;
+}
+.vt-item:hover .vt-dot{background:var(--gold);box-shadow:0 0 10px var(--gold-glow)}
+.vt-date{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin-bottom:7px}
+.vt-company{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--white);letter-spacing:-.2px;margin-bottom:3px}
+.vt-company a{color:inherit;transition:color .2s}
+.vt-company a:hover{color:var(--gold)}
+.vt-role{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:12px}
+.vt-stack{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.vt-tech{font-family:var(--mono);font-size:10px;color:var(--muted2);border:1px solid var(--border);padding:3px 8px}
+.vt-bullets{list-style:none;display:flex;flex-direction:column;gap:7px}
+.vt-bullets li{font-size:13px;line-height:1.65;color:var(--muted);padding-left:16px;position:relative;font-weight:300}
+.vt-bullets li::before{content:'→';position:absolute;left:0;color:var(--gold);font-size:11px;top:1px}
+.college-panel{background:var(--card);border:1px solid var(--border);padding:36px;position:sticky;top:100px}
+.cp-heading{
+  font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--gold);
+  text-transform:uppercase;margin-bottom:28px;
+  display:flex;align-items:center;gap:10px;
+}
+.cp-heading::after{content:'';flex:1;height:1px;background:var(--border)}
+.cp-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-bottom:2px}
+.cp-stat{background:var(--card);padding:22px 18px;transition:background .2s}
+.cp-stat:hover{background:var(--deep)}
+.cp-num{font-family:var(--serif);font-size:38px;font-weight:700;color:var(--gold);line-height:1;letter-spacing:-1px}
+.cp-label{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:6px;letter-spacing:.08em;text-transform:uppercase;line-height:1.4}
+.cp-tech-box{background:var(--card);border:1px solid var(--border);border-top:none;padding:22px}
+.cp-tech-title{font-family:var(--mono);font-size:9px;color:var(--muted2);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+.cp-tech-pills{display:flex;flex-wrap:wrap;gap:7px}
+.cp-tech-pill{font-family:var(--mono);font-size:10px;color:var(--muted);border:1px solid var(--border);padding:4px 9px;transition:all .2s}
+.cp-tech-pill:hover{color:var(--gold);border-color:var(--gold)}
+
+/* ─── PROJECTS ─── */
+.projects-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);
+}
+.proj-card{
+  background:var(--black);padding:36px 32px;
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+  transition:background .3s;
+}
+.proj-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--gold);transform:scaleX(0);transform-origin:left;
+  transition:transform .4s var(--ease);
+}
+.proj-card:hover{background:var(--card)}
+.proj-card:hover::before{transform:scaleX(1)}
+.proj-card.featured{grid-column:span 2}
+.proj-num{font-family:var(--mono);font-size:11px;color:var(--muted2);margin-bottom:16px;letter-spacing:.08em}
+.proj-badge{
+  display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:.18em;
+  color:var(--gold);background:var(--gold-dim);border:1px solid rgba(201,168,76,.2);
+  padding:3px 10px;text-transform:uppercase;margin-bottom:12px;
+}
+.proj-name{font-family:var(--serif);font-size:clamp(18px,2vw,24px);font-weight:700;color:var(--white);letter-spacing:-.3px;margin-bottom:12px;line-height:1.2}
+.proj-desc{font-size:13px;line-height:1.7;color:var(--muted);font-weight:300;margin-bottom:16px;flex:1}
+.proj-techs{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;margin-bottom:14px}
+.proj-t{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.04em}
+.proj-links{display:flex;gap:14px}
+.proj-link{
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);border-bottom:1px solid var(--border);padding-bottom:2px;
+  transition:color .2s,border-color .2s;
+}
+.proj-link:hover{color:var(--gold);border-color:var(--gold)}
+
+/* ─── SKILLS ─── */
+.skills-layout{display:grid;grid-template-columns:1fr 1fr;gap:100px}
+.skill-group{margin-bottom:44px}
+.skill-group:last-child{margin-bottom:0}
+.sg-header{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--gold);
+  text-transform:uppercase;margin-bottom:18px;
+  display:flex;align-items:center;gap:10px;
+}
+.sg-header::after{content:'';flex:1;height:1px;background:var(--border)}
+.skill-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 0;border-bottom:1px solid var(--border);
+}
+.skill-row:last-child{border-bottom:none}
+.sk-name{font-size:14px;color:var(--white)}
+.sk-level{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.04em}
+.tech-cloud{display:flex;flex-wrap:wrap;gap:9px}
+.tc-word{
+  font-family:var(--mono);font-size:12px;color:var(--muted);
+  border:1px solid var(--border);padding:8px 16px;
+  transition:color .2s,border-color .2s,transform .2s;
+}
+.tc-word:hover{color:var(--gold);border-color:var(--gold);transform:translateY(-2px)}
+.tc-word.lg{font-size:15px}.tc-word.xl{font-size:19px;font-family:var(--serif)}
+
+/* ─── ACHIEVEMENTS ─── */
+.ach-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.award-card{
+  background:var(--black);padding:36px 30px;
+  border-top:2px solid transparent;
+  transition:border-color .3s,background .3s;
+}
+.award-card:hover{background:var(--card);border-color:var(--gold)}
+.award-icon{font-family:var(--mono);font-size:24px;color:var(--gold);margin-bottom:18px;opacity:.75}
+.award-title{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--white);letter-spacing:-.2px;line-height:1.25;margin-bottom:8px}
+.award-sub{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.05em;margin-bottom:10px}
+.award-desc{font-size:13px;line-height:1.65;color:var(--muted);font-weight:300}
+
+/* ─── BEYOND CODE ─── */
+.beyond-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.beyond-card{
+  background:var(--black);padding:36px 30px;
+  border-top:2px solid transparent;
+  transition:border-color .3s,background .3s;
+}
+.beyond-card:hover{background:var(--card);border-color:var(--gold)}
+.beyond-icon{font-size:28px;margin-bottom:16px;opacity:.8;display:block}
+.beyond-title{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--white);letter-spacing:-.2px;line-height:1.25;margin-bottom:8px}
+.beyond-sub{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.05em;margin-bottom:10px}
+.beyond-desc{font-size:13px;line-height:1.65;color:var(--muted);font-weight:300}
+
+/* ─── CONTACT ─── */
+.contact-layout{display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:start}
+.ct-overline{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--gold);
+  text-transform:uppercase;display:flex;align-items:center;gap:12px;margin-bottom:20px;
+}
+.ct-overline::before{content:'';width:28px;height:1px;background:var(--gold)}
+.ct-heading{font-family:var(--serif);font-size:clamp(48px,6.5vw,80px);font-weight:900;letter-spacing:-2.5px;line-height:.93;color:var(--white);margin-bottom:30px}
+.ct-heading em{font-style:italic;color:var(--gold)}
+.ct-body{font-size:16px;line-height:1.8;color:var(--muted);font-weight:300;margin-bottom:44px;max-width:460px}
+.ct-body strong{color:var(--white);font-weight:500}
+.ct-link-list{display:flex;flex-direction:column;gap:1px;background:var(--border)}
+.ct-link-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 22px;background:var(--black);
+  transition:background .2s;
+}
+.ct-link-row:hover{background:var(--gold-dim)}
+.ct-link-platform{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.ct-link-handle{font-size:14px;color:var(--white);font-weight:500}
+.ct-link-arrow{color:var(--gold);font-size:16px;transition:transform .2s}
+.ct-link-row:hover .ct-link-arrow{transform:translateX(4px)}
+.contact-info{display:flex;flex-direction:column;gap:1px;background:var(--border)}
+.info-item{background:var(--black);padding:26px 30px;transition:background .2s}
+.info-item:hover{background:var(--card)}
+.info-label{font-family:var(--mono);font-size:10px;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px}
+.info-value{font-size:16px;color:var(--white);font-weight:500}
+.info-value a{color:var(--gold)}
+
+/* ─── FOOTER ─── */
+footer{
+  position:relative;z-index:1;border-top:1px solid var(--border);
+  padding:28px 60px;display:flex;align-items:center;justify-content:space-between;
+  font-family:var(--mono);font-size:11px;color:var(--muted2);letter-spacing:.04em;
+}
+footer a{color:var(--muted2);transition:color .2s}
+footer a:hover{color:var(--gold)}
+.footer-brand{font-family:var(--serif);font-size:17px;color:var(--muted);font-style:italic}
+</style>
+</head>
+<body>
+
+<!-- Cursor elements -->
+<div class="cursor-dot" id="dot"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<!-- Background canvas -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- ═══ NAV ═══ -->
+<nav class="nav" id="navbar">
+  <div class="nav-brand">Vishnu <span>Kumar</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Work</a></li>
+    <li><a href="#college">Origins</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#achievements">Awards</a></li>
+    <li><a href="#beyond">Beyond</a></li>
+  </ul>
+  <a href="mailto:vishnukumar.sde@gmail.com" class="nav-cta">Hire Me</a>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+  <div class="hero-eyebrow">Senior Software Engineer &nbsp;·&nbsp; Paytm Money &nbsp;·&nbsp; Bangalore</div>
+  <h1 class="hero-h1">Vishnu<br><em>Kumar.</em></h1>
+  <p class="hero-role">I engineer systems that don't break.</p>
+  <p class="hero-desc">
+    <strong>4+ years building fintech infrastructure</strong> at scale — distributed order management, real-time trading platforms, and zero-downtime migrations for millions of users. I write code that runs at 3000 RPS and stays there.
+  </p>
+  <div class="hero-btns">
+    <a href="#experience" class="btn-fill">View My Work</a>
+    <a href="#contact" class="btn-ghost">Get In Touch &nbsp;→</a>
+  </div>
+  <div class="hero-stats">
+    <div>
+      <div class="stat-val" data-target="6" data-suffix="M+">0</div>
+      <div class="stat-lbl">Users impacted across Stocks & SIPs</div>
+    </div>
+    <div>
+      <div class="stat-val" data-target="95" data-suffix="M+">0</div>
+      <div class="stat-lbl">Stock orders handled annually</div>
+    </div>
+    <div>
+      <div class="stat-val" data-target="99.9" data-suffix="%" data-float="true">0</div>
+      <div class="stat-lbl">Uptime SLA maintained</div>
+    </div>
+    <div>
+      <div class="stat-val" data-target="1920">0</div>
+      <div class="stat-lbl">LeetCode contest rating · Top 5%</div>
+    </div>
+  </div>
+  <div class="hero-scroll">Scroll to explore</div>
+</section>
+
+<!-- ═══ ABOUT ═══ -->
+<div class="section-wrap">
+<div class="section" id="about">
+  <div class="sec-tag rv"><span class="n">01 /</span> About Me</div>
+  <div class="about-grid">
+    <div class="about-body rv">
+      <p>I'm Vishnu — a Senior Software Engineer specialising in <strong>distributed systems, high-throughput APIs, and fintech infrastructure</strong>. I architect systems that remain stable under pressure, scale gracefully, and fail safely when they must.</p>
+      <p>At <strong>Paytm Money</strong>, I spearhead financial products for stocks and SIPs — directly impacting <strong>6 million users</strong> and handling <strong>95 million stock orders annually</strong>. I've led zero-downtime migrations of 3.6M records, designed SEBI-compliant DR systems with sub-30s RPO, and built the cron jobs and Lambda functions powering critical order automation.</p>
+      <p>Graduated from <a href="https://www.ietlucknow.ac.in/" target="_blank">IET Lucknow</a> (GPA 8.70). <strong>SIH Finalist in 2020 &amp; 2024</strong>. LeetCode rating 1920. Featured on a podcast about the Tier-3 → MAANG journey. Attended <strong>GitHub Constellation 2024</strong>. Now targeting Senior SDE-2 / Staff Engineer roles at MAANG-tier companies.</p>
+      <div class="tech-pills">
+        <span class="tech-pill">Java / JVM</span>
+        <span class="tech-pill">Apache Kafka</span>
+        <span class="tech-pill">AWS Architecture</span>
+        <span class="tech-pill">Distributed Systems</span>
+        <span class="tech-pill">System Design</span>
+        <span class="tech-pill">React</span>
+        <span class="tech-pill">DynamoDB</span>
+        <span class="tech-pill">Kubernetes</span>
+      </div>
+    </div>
+    <div class="portrait-box rv">
+      <div class="portrait">
+        <div class="corner tl"></div><div class="corner tr"></div>
+        <div class="corner bl"></div><div class="corner br"></div>
+        <div class="portrait-letters">VK</div>
+        <div class="portrait-badge">Bangalore · Open to Relocation</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ EXPERIENCE ═══ -->
+<div class="section-wrap">
+<div class="section" id="experience">
+  <div class="sec-tag rv"><span class="n">02 /</span> Professional Experience</div>
+  <h2 class="sec-title rv">Where I've <em>shipped</em><br>production systems.</h2>
+  <div class="exp-layout rv">
+    <div class="exp-tabs">
+      <div class="exp-tab active" data-panel="ep0">
+        <div class="etab-date">Apr 2023 – Present</div>
+        <div class="etab-co">Paytm Money</div>
+        <div class="etab-role">Senior SDE-2 · Bangalore</div>
+      </div>
+      <div class="exp-tab" data-panel="ep1">
+        <div class="etab-date">Nov 2022 – Apr 2023</div>
+        <div class="etab-co">Paytm Money</div>
+        <div class="etab-role">SDE-1 → SDE-2 · Noida</div>
+      </div>
+      <div class="exp-tab" data-panel="ep2">
+        <div class="etab-date">Aug 2021 – Oct 2022</div>
+        <div class="etab-co">Paytm Insurance</div>
+        <div class="etab-role">Software Engineer · Noida</div>
+      </div>
+    </div>
+    <div class="exp-panels">
+
+      <div class="exp-panel active" id="ep0">
+        <div class="panel-head">
+          <div class="panel-title">Senior Software Engineer <span>@ Paytm Money</span></div>
+          <div class="panel-badge">Apr 2023 – Present · Bangalore</div>
+          <div class="chip-row">
+            <span class="chip">Java</span><span class="chip">SpringBoot</span><span class="chip">Kafka</span>
+            <span class="chip">Redis</span><span class="chip">AWS</span><span class="chip">DynamoDB</span>
+            <span class="chip">Kubernetes</span><span class="chip">React</span>
+          </div>
+        </div>
+        <ul class="ach-list">
+          <li class="ach-item"><div class="ach-num">01</div><div class="ach-body"><strong>MTF Platform Architecture</strong><p>Designed MTF (Margin Trading Facility) from scratch — HLD covering API idempotency, distributed order-state machine, and at-least-once delivery via Kafka with Redis TTL deduplication. Onboarded 40K+ traders, exceeding 20% growth target by 2×.</p></div></li>
+          <li class="ach-item"><div class="ach-num">02</div><div class="ach-body"><strong>Scale & Platform Impact</strong><p>Spearheading financial products for 6 million users, handling 95 million stock orders annually at 99.5%+ API availability. Monitoring 1M+ daily customers via Kibana. Built cron jobs and Lambda functions powering critical order automation.</p></div></li>
+          <li class="ach-item"><div class="ach-num">03</div><div class="ach-body"><strong>Concurrency & Thread Safety</strong><p>Identified race condition under 3000 RPS burst traffic; introduced optimistic locking with CAS semantics in DynamoDB, eliminating all duplicate orders. First engineer to instrument the load test that surfaced it.</p></div></li>
+          <li class="ach-item"><div class="ach-num">04</div><div class="ach-body"><strong>OMS Flex — Multi-Cluster DR</strong><p>Architected active-active OMS with consistent hashing for order routing; DR failover via Route53 + DynamoDB global tables. RPO &lt; 30s, RTO &lt; 2 min — passed SEBI compliance audit.</p></div></li>
+          <li class="ach-item"><div class="ach-num">05</div><div class="ach-body"><strong>Zero-Downtime Migration — 3.6M Users</strong><p>Dual-write + shadow-read pipeline; custom reconciliation job verified checksum parity before cutover. P99 latency stayed under 200ms throughout the entire window.</p></div></li>
+          <li class="ach-item"><div class="ach-num">06</div><div class="ach-body"><strong>PII Security & SEBI Compliance</strong><p>Led AES-256 field-level encryption with AWS KMS envelope key management + Logback PII masking + quarterly key-rotation. Passed SEBI and internal audit with zero findings.</p></div></li>
+        </ul>
+      </div>
+
+      <div class="exp-panel" id="ep1">
+        <div class="panel-head">
+          <div class="panel-title">Software Engineer <span>@ Paytm Money</span></div>
+          <div class="panel-badge">Nov 2022 – Apr 2023 · Noida</div>
+          <div class="chip-row">
+            <span class="chip">Java</span><span class="chip">SpringBoot</span><span class="chip">Redis</span>
+            <span class="chip">MySQL</span><span class="chip">Kafka</span><span class="chip">AWS</span>
+          </div>
+        </div>
+        <ul class="ach-list">
+          <li class="ach-item"><div class="ach-num">01</div><div class="ach-body"><strong>EDIS Authorization & Resilience</strong><p>Built CDSL-integrated EDIS flow with HTTPS mutual TLS + Resilience4j circuit breaker + exponential back-off. Zero cascading failures during CDSL outages throughout tenure.</p></div></li>
+          <li class="ach-item"><div class="ach-num">02</div><div class="ach-body"><strong>Redis Alert Engine</strong><p>Designed Sorted Set–based alert engine supporting threshold, percentage-change, and time-series triggers. Reduced manual setup by 80%; cut alert-miss incidents from 12/month to 0.</p></div></li>
+          <li class="ach-item"><div class="ach-num">03</div><div class="ach-body"><strong>Production Deadlock Resolution</strong><p>Diagnosed out-of-order row-locking deadlock in position-switching cron; refactored lock acquisition order. P99 cron latency: 8s → 400ms.</p></div></li>
+          <li class="ach-item"><div class="ach-num">04</div><div class="ach-body"><strong>SRE & On-Call — 99.9% Uptime</strong><p>Built market-timing fallback with TTL-based cache invalidation. Maintained 99.9% uptime SLA across all trading hours. Authored on-call runbook targeting 5-minute response.</p></div></li>
+        </ul>
+      </div>
+
+      <div class="exp-panel" id="ep2">
+        <div class="panel-head">
+          <div class="panel-title">Software Engineer <span>@ Paytm Insurance</span></div>
+          <div class="panel-badge">Aug 2021 – Oct 2022 · Noida</div>
+          <div class="chip-row">
+            <span class="chip">Java</span><span class="chip">SpringBoot</span><span class="chip">MySQL</span>
+            <span class="chip">Node.js</span><span class="chip">Elasticsearch</span><span class="chip">AWS</span>
+          </div>
+        </div>
+        <ul class="ach-list">
+          <li class="ach-item"><div class="ach-num">01</div><div class="ach-body"><strong>Multi-Insurer Integration Platform</strong><p>Integrated 4 providers (HDFC, Reliance, Raheja, Star) via Strategy + Factory adapter pattern. Reduced new integration time from 3 weeks → 4 days. Policy sales grew 150% in 6 months.</p></div></li>
+          <li class="ach-item"><div class="ach-num">02</div><div class="ach-body"><strong>Geo-Search: Cashless Hospitals</strong><p>Elasticsearch geo-indexed pincode-to-hospital mapping with fuzzy search and city-level fallback. Served 50K+ queries/day at P99 &lt; 120ms.</p></div></li>
+          <li class="ach-item"><div class="ach-num">03</div><div class="ach-body"><strong>Full Observability Stack</strong><p>Shipped ELK structured logging + OpenTelemetry → Jaeger distributed tracing + Grafana dashboards. MTTR dropped from 45 min → under 8 min via request-level trace correlation.</p></div></li>
+          <li class="ach-item"><div class="ach-num">04</div><div class="ach-body"><strong>API Design & Versioning</strong><p>OpenAPI 3.0 documentation + schema validation at gateway. Maintained backward-compatible versioning across 3 API generations without breaking mobile clients.</p></div></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ COLLEGE ═══ -->
+<div class="section-wrap">
+<div class="section" id="college">
+  <div class="sec-tag rv"><span class="n">03 /</span> Origins</div>
+  <h2 class="sec-title rv">Where it all <em>began.</em></h2>
+  <p class="college-intro rv">Before Paytm, three formative internships shaped how I think about shipping software. A real-time chat feature built with WebSockets, a Pomodoro productivity app with a team of four, and a frontend for a college startup — each one teaching me something the classroom never could about <strong>shipping fast and iterating relentlessly.</strong></p>
+  <div class="college-layout">
+    <div class="vtl rv">
+      <div class="vt-item">
+        <div class="vt-dot"></div>
+        <div class="vt-date">Jul – Sep 2020</div>
+        <div class="vt-company"><a href="https://web.northeastern.edu/scout/" target="_blank">NowOrNever</a></div>
+        <div class="vt-role">Full Stack Developer</div>
+        <div class="vt-stack">
+          <span class="vt-tech">ReactJS</span><span class="vt-tech">Django</span>
+          <span class="vt-tech">Handlebars</span><span class="vt-tech">CSS</span>
+        </div>
+        <ul class="vt-bullets">
+          <li>Built a <strong>Pomodoro Tracker</strong> web app with a team of 4 — ReactJS frontend + Django backend. Session tracking, task management, and daily planning. <a href="https://github.com/Now-OrNever/pomodoro_tracker_frontend" target="_blank" style="color:var(--gold)">Live →</a></li>
+          <li>First async remote team collaboration — learned code reviews, Git branching, and shipping under time pressure.</li>
+        </ul>
+      </div>
+      <div class="vt-item">
+        <div class="vt-dot"></div>
+        <div class="vt-date">May – Jun 2020</div>
+        <div class="vt-company"><a href="http://www.nexelworld.com/" target="_blank">Decodr Technologies</a></div>
+        <div class="vt-role">SDE Intern</div>
+        <div class="vt-stack">
+          <span class="vt-tech">Node.js</span><span class="vt-tech">React</span>
+          <span class="vt-tech">Socket.io</span><span class="vt-tech">Sass</span>
+        </div>
+        <ul class="vt-bullets">
+          <li>Built a <strong>real-time live chat</strong> using Socket.io connecting mentors, investors, and service providers — first exposure to event-driven architecture and WebSockets.</li>
+          <li>Delivered multiple UI improvements across the dashboard; learned to improve codebases without breaking things.</li>
+        </ul>
+      </div>
+      <div class="vt-item">
+        <div class="vt-dot"></div>
+        <div class="vt-date">Jan – Apr 2019</div>
+        <div class="vt-company"><a href="https://www.hozotechnology.com/" target="_blank">Hozo Technology</a></div>
+        <div class="vt-role">Frontend Developer</div>
+        <div class="vt-stack">
+          <span class="vt-tech">HTML</span><span class="vt-tech">CSS</span>
+          <span class="vt-tech">JavaScript</span><span class="vt-tech">Bootstrap</span>
+        </div>
+        <ul class="vt-bullets">
+          <li>Built the entire frontend for a college startup offering on-demand web, app, and design services. First client-facing project.</li>
+          <li>Learned to balance aesthetics with delivery speed and manage expectations in a student-run environment.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="rv">
+      <div class="college-panel">
+        <div class="cp-heading">College Snapshot</div>
+        <div class="cp-stats-grid">
+          <div class="cp-stat"><div class="cp-num">8.70</div><div class="cp-label">B.Tech GPA · IET Lucknow</div></div>
+          <div class="cp-stat"><div class="cp-num">#2</div><div class="cp-label">SIH 2020 — ISRO Grand Finale</div></div>
+          <div class="cp-stat"><div class="cp-num">848</div><div class="cp-label">Google KickStart 2019 Rank</div></div>
+          <div class="cp-stat"><div class="cp-num">3</div><div class="cp-label">Internships Completed</div></div>
+        </div>
+        <div class="cp-tech-box">
+          <div class="cp-tech-title">// College-era stack</div>
+          <div class="cp-tech-pills">
+            <span class="cp-tech-pill">React</span><span class="cp-tech-pill">Django</span>
+            <span class="cp-tech-pill">Node.js</span><span class="cp-tech-pill">Socket.io</span>
+            <span class="cp-tech-pill">Python</span><span class="cp-tech-pill">C++</span>
+            <span class="cp-tech-pill">Machine Learning</span><span class="cp-tech-pill">Bootstrap</span>
+            <span class="cp-tech-pill">JavaScript ES6+</span><span class="cp-tech-pill">WebGL</span>
+            <span class="cp-tech-pill">Three.js</span><span class="cp-tech-pill">Sass</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ PROJECTS ═══ -->
+<div class="section-wrap">
+<div class="section" id="projects">
+  <div class="sec-tag rv"><span class="n">04 /</span> Projects & Open Source</div>
+  <h2 class="sec-title rv">Things I've <em>built</em><br>from first principles.</h2>
+  <div class="projects-grid rv">
+
+    <div class="proj-card featured">
+      <div class="proj-badge">Featured · Production</div>
+      <div class="proj-num">/ 01</div>
+      <div class="proj-name">MTF Order Management System</div>
+      <p class="proj-desc">Full system design for Paytm Money's Margin Trading Facility — distributed order-state machine, Kafka at-least-once delivery with Redis TTL deduplication, CAS-based optimistic locking for 3000 RPS concurrent writes. Onboarded 40K+ active traders contributing to 95M+ annual orders.</p>
+      <div class="proj-techs"><span class="proj-t">Java</span> · <span class="proj-t">Kafka</span> · <span class="proj-t">DynamoDB</span> · <span class="proj-t">Redis</span> · <span class="proj-t">AWS</span></div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-badge">SIH 2020 · ISRO · Grand Finale</div>
+      <div class="proj-num">/ 02</div>
+      <div class="proj-name">3D/4D Climate Model Visualiser</div>
+      <p class="proj-desc">ISRO problem statement — web-based volume rendering of 3D/4D atmospheric model forecasts from NetCDF data using WebGL and Three.js. Python pipeline with Matplotlib, Pandas, Numpy, Plotly.</p>
+      <div class="proj-techs"><span class="proj-t">WebGL</span> · <span class="proj-t">Three.js</span> · <span class="proj-t">Python</span> · <span class="proj-t">Plotly</span></div>
+      <div class="proj-links"><a href="https://github.com/Vish1811/SIH2020" class="proj-link" target="_blank">GitHub →</a></div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-num">/ 03</div>
+      <div class="proj-name">Thread-Safe LRU Cache</div>
+      <p class="proj-desc">Production-grade Java LRU Cache using LinkedHashMap + ReentrantReadWriteLock. O(1) get/put, benchmarked under 8-thread contention vs ConcurrentHashMap.</p>
+      <div class="proj-techs"><span class="proj-t">Java</span> · <span class="proj-t">JVM</span> · <span class="proj-t">Concurrency</span></div>
+      <div class="proj-links"><a href="https://github.com/vish1811" class="proj-link" target="_blank">GitHub →</a></div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-num">/ 04</div>
+      <div class="proj-name">Distributed Rate Limiter</div>
+      <p class="proj-desc">Redis sliding-window rate limiter with Lua scripting for atomicity. Per-user and per-IP limits, deployed as sidecar proxy with sub-millisecond overhead.</p>
+      <div class="proj-techs"><span class="proj-t">Java</span> · <span class="proj-t">Redis</span> · <span class="proj-t">Lua</span> · <span class="proj-t">Docker</span></div>
+      <div class="proj-links"><a href="https://github.com/vish1811" class="proj-link" target="_blank">GitHub →</a></div>
+    </div>
+
+    <div class="proj-card featured">
+      <div class="proj-badge">Open Source · Merged</div>
+      <div class="proj-num">/ 05</div>
+      <div class="proj-name">B-Tree Range Scan Optimisation</div>
+      <p class="proj-desc">Contributed to an open-source in-memory storage engine — optimised B-tree range scan algorithm, reducing query time by 35% on 1M-key benchmarks. PR merged with detailed profiling write-up and algorithmic analysis comparing old vs new approach.</p>
+      <div class="proj-techs"><span class="proj-t">C++</span> · <span class="proj-t">B-Tree</span> · <span class="proj-t">Storage Engines</span></div>
+      <div class="proj-links"><a href="https://github.com/vish1811" class="proj-link" target="_blank">View PR →</a></div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-num">/ 06</div>
+      <div class="proj-name">Python Voice Assistant</div>
+      <p class="proj-desc">Desktop AI assistant — Wikipedia search, opens YouTube/Google/Codeforces, plays music, reads PDFs, tells jokes, scrapes live weather and news via APIs, desktop notifications.</p>
+      <div class="proj-techs"><span class="proj-t">Python</span> · <span class="proj-t">Speech Recognition</span> · <span class="proj-t">Web Scraping</span></div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-num">/ 07</div>
+      <div class="proj-name">Early Sepsis Detection</div>
+      <p class="proj-desc">ML web solution — classification model on clinical vitals, early notifications to healthcare teams via Telegram chatbot, explainability layer. Built with Numpy, Pandas, TelegramAPI, Bootstrap.</p>
+      <div class="proj-techs"><span class="proj-t">Python</span> · <span class="proj-t">ML</span> · <span class="proj-t">TelegramAPI</span></div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-num">/ 08</div>
+      <div class="proj-name">Memories — Social App</div>
+      <p class="proj-desc">Full-stack social platform with OAuth 2.0, paginated feed, hashtag search, comments. React + Node.js deployed on AWS EC2.</p>
+      <div class="proj-techs"><span class="proj-t">React</span> · <span class="proj-t">Node.js</span> · <span class="proj-t">MongoDB</span> · <span class="proj-t">AWS EC2</span></div>
+      <div class="proj-links"><a href="#" class="proj-link">Live →</a></div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-num">/ 09</div>
+      <div class="proj-name">FO Ops Dashboard</div>
+      <p class="proj-desc">Full-stack ops tool with RBAC (JWT + Spring Security). Replaced 6 JIRA workflows, Elasticsearch audit trails, Grafana dashboards — ops toil down 70%.</p>
+      <div class="proj-techs"><span class="proj-t">React</span> · <span class="proj-t">SpringBoot</span> · <span class="proj-t">Elasticsearch</span></div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- ═══ SKILLS ═══ -->
+<div class="section-wrap">
+<div class="section" id="skills">
+  <div class="sec-tag rv"><span class="n">05 /</span> Skills & Technologies</div>
+  <h2 class="sec-title rv">The tools I <em>trust</em><br>in production.</h2>
+  <div class="skills-layout">
+    <div class="rv">
+      <div class="skill-group">
+        <div class="sg-header">Core Languages</div>
+        <div class="skill-row"><span class="sk-name">Java (JVM, GC, Concurrency)</span><span class="sk-level">Expert</span></div>
+        <div class="skill-row"><span class="sk-name">Python</span><span class="sk-level">Proficient</span></div>
+        <div class="skill-row"><span class="sk-name">JavaScript / TypeScript</span><span class="sk-level">Proficient</span></div>
+        <div class="skill-row"><span class="sk-name">SQL</span><span class="sk-level">Expert</span></div>
+        <div class="skill-row"><span class="sk-name">C++</span><span class="sk-level">Working</span></div>
+      </div>
+      <div class="skill-group">
+        <div class="sg-header">Distributed Systems</div>
+        <div class="skill-row"><span class="sk-name">Apache Kafka</span><span class="sk-level">Expert</span></div>
+        <div class="skill-row"><span class="sk-name">Redis (Sorted Sets, TTL, Pub/Sub)</span><span class="sk-level">Expert</span></div>
+        <div class="skill-row"><span class="sk-name">CAP / PACELC / Consistency Models</span><span class="sk-level">Deep</span></div>
+        <div class="skill-row"><span class="sk-name">Saga / Outbox / Idempotency</span><span class="sk-level">Deep</span></div>
+        <div class="skill-row"><span class="sk-name">Consistent Hashing</span><span class="sk-level">Applied</span></div>
+      </div>
+      <div class="skill-group">
+        <div class="sg-header">Testing & Observability</div>
+        <div class="skill-row"><span class="sk-name">JUnit 5 / Mockito / Testcontainers</span><span class="sk-level">Expert</span></div>
+        <div class="skill-row"><span class="sk-name">Pact (Contract Testing)</span><span class="sk-level">Applied</span></div>
+        <div class="skill-row"><span class="sk-name">OpenTelemetry + Jaeger</span><span class="sk-level">Applied</span></div>
+        <div class="skill-row"><span class="sk-name">Grafana + Prometheus + k6</span><span class="sk-level">Proficient</span></div>
+      </div>
+    </div>
+    <div class="rv">
+      <div class="sg-header" style="margin-bottom:24px">Technology Cloud</div>
+      <div class="tech-cloud">
+        <span class="tc-word xl">SpringBoot</span>
+        <span class="tc-word lg">DynamoDB</span>
+        <span class="tc-word">AWS Lambda</span>
+        <span class="tc-word xl">Kafka</span>
+        <span class="tc-word">Kubernetes</span>
+        <span class="tc-word lg">Redis</span>
+        <span class="tc-word">MySQL</span>
+        <span class="tc-word">Elasticsearch</span>
+        <span class="tc-word xl">Java</span>
+        <span class="tc-word">Docker</span>
+        <span class="tc-word lg">Resilience4j</span>
+        <span class="tc-word">AWS KMS</span>
+        <span class="tc-word">Route53</span>
+        <span class="tc-word xl">React</span>
+        <span class="tc-word lg">Terraform</span>
+        <span class="tc-word">Spring Security</span>
+        <span class="tc-word">OpenTelemetry</span>
+        <span class="tc-word lg">Node.js</span>
+        <span class="tc-word">Jaeger</span>
+        <span class="tc-word xl">Python</span>
+        <span class="tc-word">Testcontainers</span>
+        <span class="tc-word">Prometheus</span>
+        <span class="tc-word">SQS / SNS</span>
+        <span class="tc-word">MVCC / B-Tree</span>
+        <span class="tc-word xl">RAG / LLMs</span>
+        <span class="tc-word lg">Vector DBs</span>
+        <span class="tc-word">Prompt Engineering</span>
+        <span class="tc-word">WebGL / Three.js</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ ACHIEVEMENTS ═══ -->
+<div class="section-wrap">
+<div class="section" id="achievements">
+  <div class="sec-tag rv"><span class="n">06 /</span> Awards & Recognition</div>
+  <h2 class="sec-title rv">Numbers that <em>speak</em><br>for themselves.</h2>
+  <div class="ach-cards rv">
+    <div class="award-card">
+      <div class="award-icon">★★</div>
+      <div class="award-title">Paytm RockStar — 2nd Year Running</div>
+      <div class="award-sub">2× Consecutive Years · Exceptional Performance</div>
+      <div class="award-desc">Received the RockStar Award two years in a row — recognised for leading MTF platform delivery, zero-downtime migration of 3.6M users, and consistent delivery under pressure.</div>
+    </div>
+    <div class="award-card">
+      <div class="award-icon">SIH</div>
+      <div class="award-title">SIH 2020 — ISRO Grand Finale</div>
+      <div class="award-sub">Top 2 Nationally · Team Heisenbugs</div>
+      <div class="award-desc">Built a 3D/4D volume rendering system for ISRO atmospheric model forecasts using WebGL, Three.js, and a Python data pipeline on NetCDF data. One of top 4 teams nationally.</div>
+    </div>
+    <div class="award-card">
+      <div class="award-icon">24</div>
+      <div class="award-title">SIH 2024 Finalist</div>
+      <div class="award-sub">Back-to-Back Finalist · 2020 & 2024</div>
+      <div class="award-desc">Rare achievement of reaching the SIH Grand Finale in two separate editions four years apart, competing at national level both times.</div>
+    </div>
+    <div class="award-card">
+      <div class="award-icon">LC</div>
+      <div class="award-title">LeetCode Rating 1920</div>
+      <div class="award-sub">Top 5% · 850+ Problems · 120+ Hard</div>
+      <div class="award-desc">Active weekly contest participant. 120+ hard problems solved spanning graphs, DP, segment trees, and string algorithms under competitive time constraints.</div>
+    </div>
+    <div class="award-card">
+      <div class="award-icon">GK</div>
+      <div class="award-title">Google KickStart 2019</div>
+      <div class="award-sub">Rank 848 / 10,000+ · F-Round</div>
+      <div class="award-desc">Top 8.5% globally in Google's competitive programming competition — one of the earliest competitive programming milestones during college.</div>
+    </div>
+    <div class="award-card">
+      <div class="award-icon">CC</div>
+      <div class="award-title">CodeChef Long Challenge</div>
+      <div class="award-sub">Global Rank 582 / 15,000+ · Feb 2020</div>
+      <div class="award-desc">Top 4% finish in CodeChef's monthly long-format challenge — algorithmic problem solving at global scale during final year of college.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ BEYOND CODE ═══ -->
+<div class="section-wrap">
+<div class="section" id="beyond">
+  <div class="sec-tag rv"><span class="n">07 /</span> Beyond Code</div>
+  <h2 class="sec-title rv">Community, <em>talks</em><br>&amp; presence.</h2>
+  <div class="beyond-grid rv">
+    <div class="beyond-card">
+      <span class="beyond-icon">🎙</span>
+      <div class="beyond-title">Podcast: Tier-3 to MAANG</div>
+      <div class="beyond-sub">Featured · 2024 · with Gaurav Agrawal</div>
+      <div class="beyond-desc">Invited to share my journey from a Tier-3 college to landing offers from Amazon, Google, and Microsoft. Covered the backend developer roadmap, the service → product company transition, and how to crack top-tier interviews. Watched by thousands of aspiring engineers.</div>
+    </div>
+    <div class="beyond-card">
+      <span class="beyond-icon">⚡</span>
+      <div class="beyond-title">GitHub Constellation 2024</div>
+      <div class="beyond-sub">Attendee · Bangalore · 2024</div>
+      <div class="beyond-desc">Attended GitHub's flagship developer conference in Bangalore — connected with the open-source community, explored AI-native development workflows, and experienced GitHub's next-generation engineering tools firsthand alongside fellow builders.</div>
+    </div>
+    <div class="beyond-card">
+      <span class="beyond-icon">🌟</span>
+      <div class="beyond-title">SIH Finalist — Twice</div>
+      <div class="beyond-sub">2020 (ISRO) & 2024 · National Level</div>
+      <div class="beyond-desc">One of the rare engineers to reach Smart India Hackathon's Grand Finale in two separate editions — 2020 building an ISRO 3D climate visualiser, and 2024. Competing at national level against thousands of teams across India both times.</div>
+    </div>
+    <div class="beyond-card">
+      <span class="beyond-icon">✍</span>
+      <div class="beyond-title">LinkedIn Thought Leadership</div>
+      <div class="beyond-sub">500+ Connections · Active Creator</div>
+      <div class="beyond-desc">Shares candid takes on engineering careers, the MAANG hiring landscape, Meta's Bangalore hiring wave, and engineering wellness. Posts on what it really takes to grow from SDE-1 to senior at a fintech scale-up — regularly resonates with the developer community.</div>
+    </div>
+    <div class="beyond-card">
+      <span class="beyond-icon">🏆</span>
+      <div class="beyond-title">Competitive Programming</div>
+      <div class="beyond-sub">CodeChef Rank 582 · Google Rank 848</div>
+      <div class="beyond-desc">CodeChef Long Challenge Feb 2020 (Rank 582 / 15K+) and Google KickStart 2019 F-Round (Rank 848 / 10K+). These contests built the problem-solving instincts applied in every system design decision made since.</div>
+    </div>
+    <div class="beyond-card">
+      <span class="beyond-icon">📚</span>
+      <div class="beyond-title">Mentoring & Community</div>
+      <div class="beyond-sub">Engineering Career Guidance</div>
+      <div class="beyond-desc">Regularly receives DMs from engineers seeking guidance on the Tier-3 → product company transition. Shares learnings publicly rather than keeping them private — because information asymmetry in Indian engineering hiring needs to change.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ CONTACT ═══ -->
+<div class="section-wrap">
+<div class="section" id="contact">
+  <div class="contact-layout">
+    <div>
+      <div class="ct-overline rv">08 · Let's work together</div>
+      <h2 class="ct-heading rv">Let's build<br>something<br><em>great.</em></h2>
+      <p class="ct-body rv">I'm actively exploring <strong>Senior SDE-2 / Staff Engineer</strong> roles at MAANG and high-growth product companies. If you're building infrastructure that needs to scale, I'd love to talk.</p>
+      <div class="ct-link-list rv">
+        <a href="mailto:vishnukumar.sde@gmail.com" class="ct-link-row">
+          <span class="ct-link-platform">Email</span>
+          <span class="ct-link-handle">vishnukumar.sde@gmail.com</span>
+          <span class="ct-link-arrow">→</span>
+        </a>
+        <a href="https://www.linkedin.com/in/vish1811/" target="_blank" class="ct-link-row">
+          <span class="ct-link-platform">LinkedIn</span>
+          <span class="ct-link-handle">linkedin.com/in/vish1811</span>
+          <span class="ct-link-arrow">→</span>
+        </a>
+        <a href="https://github.com/vish1811" target="_blank" class="ct-link-row">
+          <span class="ct-link-platform">GitHub</span>
+          <span class="ct-link-handle">github.com/vish1811</span>
+          <span class="ct-link-arrow">→</span>
+        </a>
+        <a href="https://leetcode.com/vish1811" target="_blank" class="ct-link-row">
+          <span class="ct-link-platform">LeetCode</span>
+          <span class="ct-link-handle">Rating 1920 · Top 5%</span>
+          <span class="ct-link-arrow">→</span>
+        </a>
+        <a href="https://codepen.io/vish1811" target="_blank" class="ct-link-row">
+          <span class="ct-link-platform">CodePen</span>
+          <span class="ct-link-handle">codepen.io/vish1811</span>
+          <span class="ct-link-arrow">→</span>
+        </a>
+      </div>
+    </div>
+    <div class="contact-info rv">
+      <div class="info-item"><div class="info-label">Current Role</div><div class="info-value">Senior Software Engineer @ Paytm Money</div></div>
+      <div class="info-item"><div class="info-label">Location</div><div class="info-value">Bangalore, India · Open to Remote / Relocation</div></div>
+      <div class="info-item"><div class="info-label">Experience</div><div class="info-value">4+ Years · Fintech & Infrastructure</div></div>
+      <div class="info-item"><div class="info-label">Education</div><div class="info-value">B.Tech CSE · IET Lucknow · GPA 8.70</div></div>
+      <div class="info-item"><div class="info-label">Target Level</div><div class="info-value">SDE-2 / Staff Engineer · MAANG</div></div>
+      <div class="info-item"><div class="info-label">Email</div><div class="info-value"><a href="mailto:vishnukumar.sde@gmail.com">vishnukumar.sde@gmail.com</a></div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-brand">Vishnu Kumar</div>
+  <div>Designed &amp; coded from scratch · 2026</div>
+  <div>
+    <a href="https://github.com/vish1811" target="_blank">GitHub</a> &nbsp;·&nbsp;
+    <a href="https://www.linkedin.com/in/vish1811/" target="_blank">LinkedIn</a> &nbsp;·&nbsp;
+    <a href="mailto:vishnukumar.sde@gmail.com">Email</a>
+  </div>
+</footer>
+
+<script>
+// ─── CURSOR ───
+(function(){
+  const dot = document.getElementById('dot');
+  const ring = document.getElementById('ring');
+  if (!dot || !ring) return;
+
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+  let ringX = mouseX, ringY = mouseY;
+  let rafId;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    dot.style.left = mouseX + 'px';
+    dot.style.top = mouseY + 'px';
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    ring.style.left = ringX + 'px';
+    ring.style.top = ringY + 'px';
+    rafId = requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  const hoverEls = document.querySelectorAll('a, button, .exp-tab, .award-card, .beyond-card, .proj-card, .info-item');
+  hoverEls.forEach(el => {
+    el.addEventListener('mouseenter', () => { dot.classList.add('hover'); ring.classList.add('hover'); });
+    el.addEventListener('mouseleave', () => { dot.classList.remove('hover'); ring.classList.remove('hover'); });
+  });
+})();
+
+// ─── PARTICLE CANVAS ───
+(function(){
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, pts = [];
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  for (let i = 0; i < 80; i++) {
+    pts.push({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      vx: (Math.random() - .5) * .22,
+      vy: (Math.random() - .5) * .22,
+      r: Math.random() * 1.3 + .3,
+      a: Math.random() * .3 + .07
+    });
+  }
+
+  (function draw() {
+    ctx.clearRect(0, 0, W, H);
+    pts.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(201,168,76,' + p.a + ')';
+      ctx.fill();
+    });
+    for (let i = 0; i < pts.length; i++) {
+      for (let j = i + 1; j < pts.length; j++) {
+        const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 100) {
+          ctx.beginPath();
+          ctx.moveTo(pts[i].x, pts[i].y);
+          ctx.lineTo(pts[j].x, pts[j].y);
+          ctx.strokeStyle = 'rgba(201,168,76,' + (.06 * (1 - d / 100)) + ')';
+          ctx.lineWidth = .5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  })();
+})();
+
+// ─── NAV SCROLL ───
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ─── EXPERIENCE TABS ───
+document.querySelectorAll('.exp-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.exp-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.exp-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    const panel = document.getElementById(tab.dataset.panel);
+    if (panel) panel.classList.add('active');
+  });
+});
+
+// ─── SCROLL REVEAL ───
+(function(){
+  const items = document.querySelectorAll('.rv');
+  if (!items.length) return;
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
+
+  items.forEach(el => observer.observe(el));
+})();
+
+// ─── COUNTER ANIMATION ───
+(function(){
+  const counters = document.querySelectorAll('[data-target]');
+  if (!counters.length) return;
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseFloat(el.dataset.target);
+      const suffix = el.dataset.suffix || '';
+      const isFloat = el.dataset.float === 'true';
+      const duration = 1800;
+      let startTime = null;
+
+      function step(ts) {
+        if (!startTime) startTime = ts;
+        const progress = Math.min((ts - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const val = target * eased;
+        el.textContent = (isFloat ? val.toFixed(1) : Math.floor(val).toLocaleString()) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = (isFloat ? target.toFixed(1) : target.toLocaleString()) + suffix;
+      }
+      requestAnimationFrame(step);
+      observer.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+
+  counters.forEach(el => observer.observe(el));
+})();
+
+// ─── SMOOTH SCROLL ───
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+</script>
+</body>
+</html>
